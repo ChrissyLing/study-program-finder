@@ -949,20 +949,51 @@ function getProgramFocus (program) {
     program?.program?.summary_zh
   ].filter(Boolean).join(' ').toLowerCase()
 
-  if (/finance|financial|mfin|金融|economics|econ|经济|analytics|business analytics|msba|mis|mism|data|business information systems/.test(text)) return 'quant'
+  if (/hci|interaction design|ux design|design informatics|人机交互|交互设计|user experience/.test(text)) return 'hci'
+  if (/media|communication|journalism|传播|传媒|新闻|film|creative industries|advertising|public relations/.test(text)) return 'media'
+  if (/\blaw\b|legal|llm|法学|法律|juris/.test(text)) return 'law'
+  if (/education|teaching|tesol|tefl|教育|教育学|pedagogy/.test(text)) return 'education'
+  if (/finance|financial|mfin|金融|economics|econ|经济|analytics|business analytics|msba|mis|mism|data science|big data|statistics|数据科学|大数据|statistical/.test(text)) return 'quant'
   if (/marketing|mkt|市场/.test(text)) return 'marketing'
   return 'general'
 }
 
 function getMajorFitAdjustment (student, program) {
   const focus = getProgramFocus(program)
+  const major = student.major
+
   if (focus === 'quant') {
-    if (student.major === '数学统计' || student.major === 'CS/工科' || student.major === '经济学') return 4
-    if (student.major === '商科') return 1
+    if (major === '数学统计' || major === 'CS/工科' || major === '经济学') return 4
+    if (major === '商科') return 1
+    if (major === '艺术类') return -2
     return -4
   }
-  if (focus === 'marketing') return student.major === '商科' || student.major === '文社科' ? 2 : 0
-  return student.major === '商科' || student.major === '经济学' ? 2 : 0
+  if (focus === 'marketing') {
+    if (major === '商科' || major === '文社科' || major === '艺术类') return 2
+    return 0
+  }
+  if (focus === 'media') {
+    if (major === '艺术类' || major === '文社科') return 3
+    if (major === '商科') return 2
+    return 0
+  }
+  if (focus === 'hci') {
+    if (major === '艺术类') return 4
+    if (major === 'CS/工科') return 3
+    if (major === '文社科') return 1
+    return 0
+  }
+  if (focus === 'law') {
+    if (major === '文社科' || major === '经济学') return 2
+    if (major === '艺术类') return 0
+    return -1
+  }
+  if (focus === 'education') {
+    if (major === '文社科' || major === '艺术类' || major === '商科') return 2
+    return 0
+  }
+  if (major === '商科' || major === '经济学') return 2
+  return 0
 }
 
 function getSoftBonus (student) {
