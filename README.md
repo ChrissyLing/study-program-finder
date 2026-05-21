@@ -5,7 +5,7 @@
 ## 当前能力
 
 - 项目检索：搜索、地区筛选、方向标签筛选、排序（含 **性价比 PPP**：学费 ÷ QS 启发式）
-- 项目库：**108** 个项目，覆盖 UK / US / HK / SG，方向含 MKT、Finance、BA、Management、Economics、MIS 等
+- 项目库：**180+** 个项目，覆盖 UK / US / HK / SG；方向含商科（BA / Finance / MKT 等）、**计算机（CS）**、**传媒（Media）**、**数据科学（DataScience）**、**交互设计（HCI）**、**法律（Law）**、**教育（Education）** 等
 - 背景评估：用户手动填写档案并点击评估后，展示 Reach / Match / Safety 结果
 - 轻量 SaaS：本地档案保存 / 自动载入 / 清空，项目收藏，本地对比队列
 - 横向滚动优化：列表表格 sticky 首列、横滚提示、移动端顺滑滚动

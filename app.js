@@ -11,13 +11,36 @@ const REGION_LABELS = {
 }
 
 const DIRECTION_OPTIONS = [
-  { value: 'BA', label: 'BA', keywords: ['ba', 'business analytics', 'analytics', 'msba', '商业分析', '数据'] },
-  { value: 'Finance', label: 'Finance', keywords: ['finance', 'mfin', 'financial', '金融'] },
-  { value: 'MKT', label: 'MKT', keywords: ['marketing', 'mkt', 'market', '市场'] },
-  { value: 'Management', label: 'Management', keywords: ['management', 'strategy', 'management science', '管理', '战略'] },
+  { value: 'BA', label: '商业分析', keywords: ['business analytics', 'msba', 'mban', '商业分析', 'analytics and business'] },
+  { value: 'Finance', label: 'Finance', keywords: ['finance', 'mfin', 'financial', '金融', 'quantitative finance'] },
+  { value: 'MKT', label: 'MKT', keywords: ['marketing', 'mkt', 'market', '市场', 'brand management'] },
+  { value: 'Management', label: 'Management', keywords: ['management', 'strategy', 'management science', '管理', '战略', 'mba'] },
   { value: 'Economics', label: 'Economics', keywords: ['economics', 'econ', '经济'] },
-  { value: 'MIS', label: 'MIS', keywords: ['mis', 'mism', 'information systems', 'business information systems', '资讯系统', '信息系统'] }
+  { value: 'MIS', label: 'MIS', keywords: ['mis', 'mism', 'information systems', 'business information systems', '资讯系统', '信息系统'] },
+  { value: 'CS', label: '计算机', keywords: ['computer science', 'computing', 'software engineering', 'informatics', 'cyber security', '计算机', '计算机科学', '软件工程', 'msc computer', 'ms computer', 'meng computer', 'artificial intelligence', 'machine learning', 'deep learning', 'robotics'] },
+  { value: 'DataScience', label: '数据科学', keywords: ['data science', 'big data', 'statistical science', 'statistics', '数据科学', '大数据', 'analytics'] },
+  { value: 'Media', label: '传媒 / 媒体', keywords: ['media', 'communication', 'communications', 'journalism', 'film', 'digital media', 'creative industries', '传媒', '传播', '新闻', '公共关系', 'public relations', 'advertising'] },
+  { value: 'HCI', label: '交互 / 设计', keywords: ['human-computer', 'hci', 'interaction design', 'ux design', 'user experience', 'design informatics', '人机交互', '交互设计'] },
+  { value: 'Law', label: '法律', keywords: ['law', 'legal', 'llm', 'juris', '法学', '法律', '知识产权法', 'international law', 'commercial law', 'corporate law'] },
+  { value: 'Education', label: '教育', keywords: ['education', 'teaching', 'pedagogy', 'curriculum', 'tesol', 'tefl', '教育', '教育学', '师范', 'master of education', 'm.ed', 'ma education', 'ms.ed', 'med programme', 'med program'] }
 ]
+
+function inferProgramTags (program) {
+  const explicit = Array.isArray(program?.program?.tags) ? [...program.program.tags] : []
+  const text = [
+    program?.program?.name_en,
+    program?.program?.name_zh,
+    program?.program?.summary_zh
+  ].filter(Boolean).join(' ').toLowerCase()
+
+  const inferred = []
+  DIRECTION_OPTIONS.forEach((option) => {
+    if (option.keywords.some((keyword) => text.includes(keyword.toLowerCase()))) {
+      inferred.push(option.value)
+    }
+  })
+  return [...new Set([...explicit, ...inferred])]
+}
 
 const TARGET_REGION_OPTIONS = [
   { value: 'UK', label: 'UK' },
@@ -490,7 +513,7 @@ function normalizeProgram (program) {
   const name = program?.program?.name_zh || program?.program?.name_en || '未命名项目'
   const university = program?.university?.name_zh || program?.university?.name_en || '未命名学校'
   const region = program?.region || '—'
-  const tags = Array.isArray(program?.program?.tags) ? program.program.tags : []
+  const tags = inferProgramTags(program)
   const haystack = [
     name,
     program?.program?.name_en,
@@ -1002,8 +1025,11 @@ function getBaseline (program, student) {
 
 function programMatchesDirection (program, selectedDirections) {
   if (!selectedDirections || selectedDirections.size === 0) return true
+  const tagList = Array.isArray(program?.__tags)
+    ? program.__tags
+    : (Array.isArray(program?.program?.tags) ? program.program.tags : [])
   const text = [
-    ...(Array.isArray(program?.program?.tags) ? program.program.tags : []),
+    ...tagList,
     program?.program?.name_en,
     program?.program?.name_zh,
     program?.program?.summary_zh,
