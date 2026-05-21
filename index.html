@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>留学项目对比与背景评估助手</title>
+  <meta name="description" content="面向申请者的纯前端项目检索工具：支持背景评估、项目收藏、项目对比与本地档案保存，全部数据仅保存在当前浏览器。" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji'],
+            display: ['Plus Jakarta Sans', 'Inter', 'ui-sans-serif', 'system-ui']
+          },
+          colors: {
+            ink: {
+              950: 'hsl(222 47% 11%)',
+              900: 'hsl(222 47% 15%)',
+              800: 'hsl(222 47% 22%)',
+              700: 'hsl(222 47% 28%)',
+              600: 'hsl(222 32% 38%)',
+              500: 'hsl(222 20% 52%)'
+            },
+            paper: {
+              50: 'hsl(210 40% 99%)',
+              100: 'hsl(210 40% 97%)',
+              200: 'hsl(214 32% 91%)',
+              300: 'hsl(214 25% 84%)'
+            },
+            brand: {
+              50: 'hsl(222 100% 97%)',
+              100: 'hsl(222 95% 93%)',
+              300: 'hsl(222 90% 70%)',
+              500: 'hsl(222 88% 56%)',
+              600: 'hsl(222 78% 50%)',
+              700: 'hsl(222 72% 42%)'
+            },
+            accent: {
+              uk: 'hsl(246 80% 58%)',
+              us: 'hsl(346 78% 56%)',
+              hk: 'hsl(280 70% 56%)',
+              sg: 'hsl(168 72% 38%)'
+            }
+          },
+          boxShadow: {
+            soft: '0 8px 30px rgba(15, 23, 42, 0.06)',
+            card: '0 1px 0 rgba(15, 23, 42, 0.04), 0 10px 25px rgba(15, 23, 42, 0.06)',
+            pop: '0 20px 50px -20px rgba(15, 23, 42, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: light; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { overflow-wrap: anywhere; }
+    .font-display { font-family: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui; letter-spacing: -0.01em; }
+
+    /* === scrollbars / horizontal scroll === */
+    .nice-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
+    .nice-scrollbar::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.18); border-radius: 999px; border: 3px solid rgba(255,255,255,0.85); }
+    .nice-scrollbar::-webkit-scrollbar-track { background: rgba(15,23,42,0.04); border-radius: 999px; }
+    .smooth-x-scroll { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .scroll-shell { position: relative; }
+    .scroll-shell__notice {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px 0; font-size: 12px; color: hsl(222 32% 38%);
+    }
+    .scroll-shell__notice::after {
+      content: '← 滑动查看更多 →'; white-space: nowrap; color: hsl(222 32% 38%);
+    }
+    .scroll-shell__fade {
+      position: absolute; top: 40px; bottom: 12px; width: 22px;
+      pointer-events: none; opacity: 0; transition: opacity .2s ease; z-index: 25;
+    }
+    .scroll-shell__fade--left { left: 0; background: linear-gradient(to right, rgba(248,250,252,.96), rgba(248,250,252,0)); }
+    .scroll-shell__fade--right { right: 0; background: linear-gradient(to left, rgba(248,250,252,.96), rgba(248,250,252,0)); }
+    .scroll-shell[data-left-shadow="true"] .scroll-shell__fade--left,
+    .scroll-shell[data-right-shadow="true"] .scroll-shell__fade--right { opacity: 1; }
+    .sticky-first-col {
+      position: sticky; left: 0; z-index: 20; background: #fff;
+      box-shadow: 8px 0 16px rgba(15,23,42,.08); border-right: 1px solid rgba(148,163,184,.22);
+    }
+    .sticky-first-col--head { background: rgb(248 250 252); z-index: 30; }
+    .table-row:hover .sticky-first-col { background: rgb(248 250 252); }
+    .sticky-key-col {
+      position: sticky; left: 0; z-index: 12; background: #fff;
+      box-shadow: 8px 0 16px rgba(15,23,42,.08); border-right: 1px solid rgba(148,163,184,.22);
+    }
+    .sticky-key-col--head { background: rgb(248 250 252); z-index: 18; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* === hero / background === */
+    .hero-bg {
+      background:
+        radial-gradient(1200px 600px at 10% -10%, hsla(222, 95%, 93%, .6), transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, hsla(280, 70%, 90%, .45), transparent 55%),
+        linear-gradient(180deg, hsl(210 40% 99%) 0%, hsl(210 40% 97%) 100%);
+    }
+    .glass {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: saturate(140%) blur(12px);
+      -webkit-backdrop-filter: saturate(140%) blur(12px);
+    }
+
+    /* === region accent stripes === */
+    .region-stripe { width: 4px; border-radius: 999px; align-self: stretch; }
+    .region-UK { background: hsl(246 80% 58%); }
+    .region-US { background: hsl(346 78% 56%); }
+    .region-HongKong { background: hsl(280 70% 56%); }
+    .region-Singapore { background: hsl(168 72% 38%); }
+
+    /* === chip / button hovers === */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+      border: 1px solid hsl(214 32% 91%); background: #fff; color: hsl(222 47% 22%);
+      font-size: 12px; font-weight: 500; transition: all .15s ease;
+    }
+    .chip:hover { background: hsl(210 40% 97%); border-color: hsl(214 25% 84%); }
+    .chip[aria-pressed="true"] {
+      background: hsl(222 47% 11%); color: #fff; border-color: hsl(222 47% 11%);
+    }
+    .chip-compact {
+      padding: 4px 10px;
+      font-size: 11px;
+      gap: 4px;
+    }
+
+    /* === badge tints === */
+    .pill { display:inline-flex; align-items:center; white-space:nowrap; border-radius:999px; border:1px solid; padding:4px 10px; font-size:12px; font-weight:500; }
+
+    /* === scroll-to-top === */
+    #scroll-top {
+      position: fixed; right: 18px; bottom: 24px; z-index: 30;
+      width: 40px; height: 40px; border-radius: 999px;
+      background: hsl(222 47% 11%); color: #fff; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 30px -10px rgba(15,23,42,.5); opacity: 0; transform: translateY(8px);
+      transition: opacity .2s ease, transform .2s ease; pointer-events: none;
+    }
+    #scroll-top.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    /* === card / table accents === */
+    .program-card { transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+    .program-card:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -16px rgba(15,23,42,.18); border-color: hsl(214 25% 84%); }
+
+    /* === assessment shrunk panel === */
+    details#assessment-panel[open] summary { background: hsl(210 40% 97%); }
+
+    /* === Reach/Match/Safety dots === */
+    .dot { width: 8px; height: 8px; border-radius: 999px; display:inline-block; }
+
+    /* === skeleton tweaks === */
+    .skeleton { background: linear-gradient(90deg, hsl(214 32% 91%) 0%, hsl(210 40% 97%) 50%, hsl(214 32% 91%) 100%); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    /* === app nav / views === */
+    .app-nav {
+      border-bottom: 1px solid hsl(214 32% 91%);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: saturate(140%) blur(12px);
+    }
+    .nav-tab {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 14px; border-radius: 999px; border: 1px solid transparent;
+      font-size: 13px; font-weight: 500; color: hsl(222 32% 38%);
+      transition: all .15s ease; white-space: nowrap;
+    }
+    .nav-tab:hover { background: hsl(210 40% 97%); color: hsl(222 47% 15%); }
+    .nav-tab--active {
+      background: hsl(222 47% 11%); color: #fff; border-color: hsl(222 47% 11%);
+      box-shadow: 0 4px 14px rgba(15,23,42,.12);
+    }
+    .app-view.hidden { display: none !important; }
+    /* 浏览筛选条随页面滚动，不 sticky（首屏留给列表更多空间） */
+    .browse-toolbar {
+      position: relative;
+      z-index: 1;
+      border-bottom: 1px solid hsl(214 32% 91%);
+      background: rgba(248,250,252,.92);
+      backdrop-filter: blur(10px);
+    }
+    .fx-meta-details > summary {
+      list-style: none;
+    }
+    .fx-meta-details > summary::-webkit-details-marker {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="bg-paper-50 text-ink-950">
+  <div class="min-h-screen">
+    <!-- ============ Sticky Top Bar ============ -->
+    <header class="sticky top-0 z-40 border-b border-paper-200 glass">
+      <div class="mx-auto w-full max-w-[min(1720px,calc(100vw-32px))] px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between gap-3 py-3">
+          <a href="#top" class="flex items-center gap-3 min-w-0">
+            <div class="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-500 via-brand-600 to-accent-hk text-white shadow-pop">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <path d="M3 9 12 4l9 5-9 5-9-5Z" />
+                <path d="M7 11.5v4c0 1.3 2.2 2.5 5 2.5s5-1.2 5-2.5v-4" />
+                <path d="M21 9v5" />
+              </svg>
+              <span class="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_8px_rgba(252,211,77,0.8)]"></span>
+            </div>
+            <div class="min-w-0 hidden sm:block">
+              <div class="text-sm font-semibold text-ink-950">留学项目对比助手</div>
+              <div class="text-[11px] text-ink-600">UK · US · HK · SG · 商科 / 数据 / 经济方向</div>
+            </div>
+            <div class="text-sm font-semibold text-ink-950 sm:hidden">留学项目助手</div>
+          </a>
+
+          <div class="flex items-center gap-2">
+            <button id="btn-help" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100 sm:text-sm">使用说明</button>
+            <button id="btn-open-sources" class="hidden rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100 lg:inline-flex lg:text-sm">字段来源</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <a id="top"></a>
+
+    <nav class="app-nav sticky top-[57px] z-[35]" aria-label="主功能导航">
+      <div class="mx-auto w-full max-w-[min(1720px,calc(100vw-32px))] px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-2 overflow-x-auto py-2.5 nice-scrollbar">
+          <button type="button" data-nav-view="browse" class="nav-tab nav-tab--active" aria-current="page">浏览项目</button>
+          <button type="button" data-nav-view="assessment" class="nav-tab">背景评估</button>
+          <button type="button" data-nav-view="ppp" class="nav-tab">性价比</button>
+          <button type="button" data-nav-view="favorites" class="nav-tab">收藏 <span id="favorites-count-badge" class="rounded-full bg-paper-100 px-1.5 py-0.5 text-[10px] font-semibold text-ink-700">0</span></button>
+          <button type="button" data-nav-view="compare" class="nav-tab">对比 <span id="compare-count-badge" class="rounded-full bg-paper-100 px-1.5 py-0.5 text-[10px] font-semibold text-ink-700">0/4</span></button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ Hero (hidden) ============ -->
+    <section class="hidden hero-bg border-b border-paper-200">
+      <div class="mx-auto w-full max-w-[min(1720px,calc(100vw-32px))] px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] lg:items-end">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-paper-200 bg-white/80 px-3 py-1 text-xs text-ink-700 shadow-soft">
+              <span class="dot bg-emerald-500"></span>
+              <span>纯前端 · 所有数据来自官方公开页 + 本地浏览器</span>
+            </div>
+            <h1 class="mt-5 font-display text-3xl font-extrabold leading-tight text-ink-950 sm:text-4xl lg:text-5xl">
+              一站对比 <span class="bg-gradient-to-r from-brand-600 to-accent-hk bg-clip-text text-transparent">商科 / 数据 / 经济</span><br class="hidden sm:block" />
+              方向的研究生项目
+            </h1>
+            <p class="mt-4 max-w-2xl text-sm text-ink-600 sm:text-base">
+              聚合英国、美国、中国香港、新加坡共 <span id="hero-total" class="font-semibold text-ink-900">—</span> 个项目；筛 QS、学费、学制与申请截止，填一份档案即可得到 Reach / Match / Safety 分档建议。
+            </p>
+
+            <!-- big search -->
+            <div id="browse-search-block" class="max-w-2xl">
+              <label class="sr-only" for="search">搜索项目</label>
+              <div class="relative">
+                <input id="search" type="search" placeholder="搜索项目 / 学校 / 城市 / 标签（如 BA · Finance · MKT · MIS）" class="w-full rounded-xl border border-paper-200 bg-white px-4 py-2.5 pr-12 text-sm shadow-card outline-none placeholder:text-ink-500 focus:border-brand-500 sm:text-sm" />
+                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-ink-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4">
+                    <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 4.091 12.119l4.52 4.52a.75.75 0 0 0 1.06-1.06l-4.52-4.52A6.75 6.75 0 0 0 10.5 3.75Zm-5.25 6.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0Z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink-600">
+                <span class="text-ink-500">热门方向</span>
+                <div id="hero-quick-tags" class="flex flex-wrap gap-2"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- stats card -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-2xl border border-paper-200 bg-white p-4 shadow-soft">
+              <div class="text-[11px] uppercase tracking-wider text-ink-500">收录项目</div>
+              <div class="mt-2 font-display text-3xl font-bold text-ink-950" id="hero-stat-programs">—</div>
+              <div class="mt-1 text-xs text-ink-600">来自学校官网 + 公开 QS 排名</div>
+            </div>
+            <div class="rounded-2xl border border-paper-200 bg-white p-4 shadow-soft">
+              <div class="text-[11px] uppercase tracking-wider text-ink-500">国家 / 地区</div>
+              <div class="mt-2 font-display text-3xl font-bold text-ink-950" id="hero-stat-regions">—</div>
+              <div class="mt-1 text-xs text-ink-600">UK · US · HK · SG</div>
+            </div>
+            <div class="rounded-2xl border border-paper-200 bg-white p-4 shadow-soft">
+              <div class="text-[11px] uppercase tracking-wider text-ink-500">方向标签</div>
+              <div class="mt-2 font-display text-3xl font-bold text-ink-950" id="hero-stat-tags">—</div>
+              <div class="mt-1 text-xs text-ink-600">BA · Finance · MKT 等</div>
+            </div>
+            <div class="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-4 shadow-soft">
+              <div class="flex items-center justify-between">
+                <div class="text-[11px] uppercase tracking-wider text-amber-700">本月截止</div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-amber-600">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 2"/>
+                </svg>
+              </div>
+              <div class="mt-2 font-display text-3xl font-bold text-amber-700" id="hero-stat-deadline">—</div>
+              <div class="mt-1 text-xs text-amber-900/70">基于官网最新轮次</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Region tabs + quick controls -->
+        <div id="browse-controls-row" class="mt-8 flex flex-col gap-2 rounded-xl border border-paper-200 bg-white/70 p-2 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+          <div id="region-tabs" class="flex flex-wrap items-center gap-1.5"></div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="filter-deadline-soon" class="chip chip-compact" aria-pressed="false">
+              <span class="dot bg-amber-500"></span>
+              <span>本月 / 临近截止</span>
+            </button>
+            <div id="fx-global-toggle"></div>
+            <div class="inline-flex items-center gap-0.5 rounded-lg border border-paper-200 bg-paper-50 p-0.5">
+              <button id="view-mode-table" type="button" class="rounded-md border border-ink-950 bg-ink-950 px-2.5 py-1 text-[11px] font-medium text-white">表格</button>
+              <button id="view-mode-cards" type="button" class="rounded-md border border-paper-200 bg-white px-2.5 py-1 text-[11px] font-medium text-ink-700">卡片</button>
+            </div>
+            <button id="btn-reset" class="rounded-lg border border-paper-200 bg-white px-2.5 py-1 text-[11px] font-medium text-ink-900 shadow-soft hover:bg-paper-100">重置筛选</button>
+          </div>
+        </div>
+
+        <div id="fx-meta-banner" class="mt-0"></div>
+      </div>
+    </section>
+
+    <!-- ============ Main ============ -->
+    <main class="mx-auto w-full max-w-[min(1720px,calc(100vw-32px))] px-4 py-8 sm:px-6 lg:px-8">
+      <div id="app-message" class="mb-4 hidden rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-ink-800 shadow-soft"></div>
+
+      <div id="loading" class="rounded-2xl border border-paper-200 bg-white p-6 shadow-soft">
+        <div class="space-y-4">
+          <div class="h-4 w-40 rounded skeleton"></div>
+          <div class="h-10 w-full rounded skeleton"></div>
+          <div class="h-10 w-full rounded skeleton"></div>
+          <div class="h-10 w-3/4 rounded skeleton"></div>
+        </div>
+      </div>
+
+      <div id="app" class="hidden space-y-6">
+        <!-- Assessment panel (collapsed by default) -->
+        <details id="assessment-panel" class="overflow-hidden rounded-2xl border border-paper-200 bg-white shadow-soft">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <path d="M9 11l2 2 4-4"/>
+                    <rect x="4" y="4" width="16" height="16" rx="2.5"/>
+                  </svg>
+                </span>
+                <h2 class="text-sm font-semibold text-ink-950 sm:text-base">申请者档案与匹配评估</h2>
+              </div>
+              <p class="mt-1 text-xs text-ink-600">填一次档案，自动得到每个项目的 Reach / Match / Safety 分档，附理由说明。结果只在你本机生成。</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span id="assessment-status" class="rounded-full bg-paper-100 px-3 py-1 text-xs font-medium text-ink-700">尚未评估</span>
+              <span class="rounded-full border border-paper-200 bg-paper-50 px-3 py-1 text-xs font-medium text-ink-700">展开 / 收起</span>
+            </div>
+          </summary>
+
+          <div class="border-t border-paper-200 px-5 pb-5 pt-4">
+            <div class="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+              <form id="assessment-form" class="space-y-5">
+                <section class="rounded-2xl border border-paper-200 bg-paper-50 p-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <h3 class="text-sm font-semibold">基础背景</h3>
+                      <p class="mt-1 text-xs text-ink-600">尽量按实际情况填写；本工具不连接后端，也不会输出录取概率。</p>
+                    </div>
+                    <span class="rounded-full bg-white px-3 py-1 text-xs text-ink-600 ring-1 ring-paper-200">本地浏览器保存</span>
+                  </div>
+
+                  <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">本科院校层级</span>
+                      <select id="assessment-school-tier" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft">
+                        <option value="C9">C9</option>
+                        <option value="985">985</option>
+                        <option value="211">211</option>
+                        <option value="双非一本">双非一本</option>
+                        <option value="双非普通" selected>双非普通</option>
+                        <option value="海本(QS前100)">海本（QS 前 100）</option>
+                        <option value="海本(QS100-300)">海本（QS 100-300）</option>
+                        <option value="海本(QS300+)">海本（QS 300+）</option>
+                        <option value="其他">其他</option>
+                      </select>
+                    </label>
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">学校名称（选填）</span>
+                      <input id="assessment-school-name" type="text" placeholder="例如：复旦大学 / Nottingham / HKU" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft" />
+                    </label>
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">本科专业背景</span>
+                      <select id="assessment-major" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft">
+                        <option value="商科" selected>商科</option>
+                        <option value="经济学">经济学</option>
+                        <option value="数学统计">数学 / 统计</option>
+                        <option value="CS/工科">CS / 工科</option>
+                        <option value="文社科">文社科</option>
+                        <option value="其他">其他</option>
+                      </select>
+                    </label>
+                  </div>
+                </section>
+
+                <section class="rounded-2xl border border-paper-200 bg-paper-50 p-4">
+                  <h3 class="text-sm font-semibold">学术与标化</h3>
+                  <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[200px_minmax(0,1fr)_220px]">
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">GPA 制式</span>
+                      <select id="assessment-gpa-mode" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft">
+                        <option value="4.0" selected>4.0 制</option>
+                        <option value="100">百分制</option>
+                        <option value="uk">英制等级</option>
+                      </select>
+                    </label>
+                    <label id="assessment-gpa-value-wrap" class="block">
+                      <span class="text-xs font-semibold text-ink-700">GPA</span>
+                      <input id="assessment-gpa-value" type="number" step="0.01" min="0" placeholder="例如 3.7 / 88" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft" />
+                    </label>
+                    <label id="assessment-gpa-uk-wrap" class="hidden block">
+                      <span class="text-xs font-semibold text-ink-700">英制等级</span>
+                      <select id="assessment-gpa-uk-class" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft">
+                        <option value="First Class">First Class</option>
+                        <option value="2:1" selected>2:1</option>
+                        <option value="2:2">2:2</option>
+                      </select>
+                    </label>
+                  </div>
+                  <p id="assessment-gpa-helper" class="mt-2 text-xs text-ink-600">当前按 4.0 制输入；硬门槛只在项目给出可量化 GPA 时做精确比较。</p>
+
+                  <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">雅思总分</span>
+                      <input id="assessment-ielts" type="number" min="0" max="9" step="0.5" placeholder="至少填 IELTS 或 TOEFL 其一" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft" />
+                    </label>
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">托福总分</span>
+                      <input id="assessment-toefl" type="number" min="0" max="120" step="1" placeholder="至少填 IELTS 或 TOEFL 其一" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft" />
+                    </label>
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">GRE（选填）</span>
+                      <input id="assessment-gre" type="number" min="260" max="340" step="1" placeholder="260-340" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft" />
+                    </label>
+                    <label class="block">
+                      <span class="text-xs font-semibold text-ink-700">GMAT（选填）</span>
+                      <input id="assessment-gmat" type="number" min="200" max="800" step="1" placeholder="200-800" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft" />
+                    </label>
+                  </div>
+                </section>
+
+                <section class="rounded-2xl border border-paper-200 bg-paper-50 p-4">
+                  <div class="grid grid-cols-1 gap-4 xl:grid-cols-[280px_minmax(0,1fr)]">
+                    <div>
+                      <label class="block">
+                        <span class="text-xs font-semibold text-ink-700">软背景强弱</span>
+                        <select id="assessment-soft-level" class="mt-2 w-full rounded-xl border border-paper-200 bg-white px-3 py-2.5 text-sm shadow-soft">
+                          <option value="basic">基础</option>
+                          <option value="balanced" selected>均衡</option>
+                          <option value="strong">突出</option>
+                        </select>
+                      </label>
+                      <p id="assessment-soft-helper" class="mt-2 text-xs text-ink-600">基础：经历较少；均衡：有一定相关经历；突出：有多段强相关经历或更强科研 / 头部平台经历。</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <div>
+                        <span class="text-xs font-semibold text-ink-700">目标方向（可多选）</span>
+                        <div id="assessment-target-directions" class="mt-2 flex flex-wrap gap-2"></div>
+                      </div>
+                      <div>
+                        <span class="text-xs font-semibold text-ink-700">目标地区（可多选）</span>
+                        <div id="assessment-target-regions" class="mt-2 flex flex-wrap gap-2"></div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                  <button id="assessment-run" type="button" class="inline-flex items-center justify-center rounded-xl bg-ink-950 px-4 py-3 text-sm font-medium text-white shadow-card hover:bg-ink-900">保存并评估</button>
+                  <button id="profile-save" type="button" class="inline-flex items-center justify-center rounded-xl border border-paper-200 bg-white px-4 py-3 text-sm font-medium text-ink-900 shadow-soft hover:bg-paper-100">仅保存档案</button>
+                  <button id="profile-clear" type="button" class="inline-flex items-center justify-center rounded-xl border border-paper-200 bg-white px-4 py-3 text-sm font-medium text-ink-900 shadow-soft hover:bg-paper-100">清空档案</button>
+                  <p class="text-xs text-ink-600 sm:ml-auto">档案与评估结果都只在你本机；换设备 / 清缓存会丢失。</p>
+                </div>
+              </form>
+
+              <aside class="space-y-3">
+                <div class="rounded-2xl border border-paper-200 bg-paper-50 p-4">
+                  <h3 class="text-sm font-semibold">评估说明</h3>
+                  <div id="assessment-summary" class="mt-3 rounded-xl border border-paper-200 bg-white p-3 text-xs text-ink-700">尚未评估。已保存的档案会自动载入，但不会自动计算结果。</div>
+                </div>
+
+                <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-ink-800">
+                  <p class="font-semibold">关于分档</p>
+                  <p class="mt-2">Reach / Match / Safety 只用于辅助排序与理解门槛，不代表真实录取概率。语言、GPA、截止、学费等仍以官网为准。</p>
+                </div>
+
+                <div class="rounded-2xl border border-brand-100 bg-brand-50 p-4 text-xs text-ink-700">
+                  <p class="font-semibold text-ink-900">档案自动载入</p>
+                  <p class="mt-2">下次打开页面会自动回填你这里填的内容，但匹配结果不会自动恢复，需要手动点击"保存并评估"。</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </details>
+
+        <!-- ============ Content grid ============ -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <!-- Sidebar (below list on mobile; region/tags in top toolbar) -->
+          <aside class="order-2 space-y-5 lg:order-1 lg:col-span-3 xl:col-span-3">
+            <div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h2 class="text-sm font-semibold">筛选与排序</h2>
+                  <p class="mt-1 text-xs text-ink-600">叠加搜索 + 地区 / 方向标签快速缩小范围</p>
+                </div>
+                <span id="stat-count" class="shrink-0 rounded-full bg-paper-100 px-3 py-1 text-xs font-medium text-ink-700">—</span>
+              </div>
+
+              <div class="mt-5 space-y-5">
+                <section class="hidden xl:block">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-semibold text-ink-700">地区</h3>
+                    <span class="text-xs text-ink-500">UK · US · HK · SG</span>
+                  </div>
+                  <div id="filter-regions" class="mt-2 grid grid-cols-2 gap-2"></div>
+                </section>
+
+                <section class="hidden xl:block">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-semibold text-ink-700">方向标签</h3>
+                    <span class="text-xs text-ink-500" id="filter-tags-count">来自项目标签</span>
+                  </div>
+                  <div id="filter-tags" class="mt-2 flex flex-wrap gap-2"></div>
+                </section>
+
+                <section>
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-semibold text-ink-700">排序</h3>
+                    <span class="text-xs text-ink-500">表格 / 卡片同步</span>
+                  </div>
+                  <div class="mt-2 grid grid-cols-2 gap-2">
+                    <select id="sort-key" class="w-full rounded-xl border border-paper-200 bg-white px-3 py-2 text-sm shadow-soft">
+                      <option value="qs">QS 排名</option>
+                      <option value="ppp">性价比 PPP</option>
+                      <option value="tuition">学费（本币）</option>
+                      <option value="duration">学制</option>
+                      <option value="deadline">申请截止</option>
+                      <option value="name">项目名</option>
+                    </select>
+                    <select id="sort-dir" class="w-full rounded-xl border border-paper-200 bg-white px-3 py-2 text-sm shadow-soft">
+                      <option value="asc">升序</option>
+                      <option value="desc">降序</option>
+                    </select>
+                  </div>
+                </section>
+
+                <section class="rounded-xl border border-brand-100 bg-brand-50 p-3">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-xs font-semibold text-ink-700">收藏过滤</div>
+                      <p class="mt-1 text-xs text-ink-600">快速只看已收藏项目</p>
+                    </div>
+                    <button id="toggle-favorite-filter" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-700 shadow-soft hover:bg-paper-100">仅看收藏：关</button>
+                  </div>
+                </section>
+              </div>
+            </div>
+
+            <!-- Favorites preview -->
+            <div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h2 class="text-sm font-semibold">收藏列表</h2>
+                  <p class="mt-1 text-xs text-ink-600">在表格 / 卡片 / 详情中点击收藏</p>
+                </div>
+                <button id="btn-open-favorites-side" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100">查看全部</button>
+              </div>
+              <div id="favorites-preview" class="mt-4 space-y-2 text-sm"></div>
+            </div>
+
+            <!-- Compare preview -->
+            <div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h2 class="text-sm font-semibold">对比队列</h2>
+                  <p class="mt-1 text-xs text-ink-600">最多 4 个，同屏对比关键字段</p>
+                </div>
+                <button id="btn-open-compare-side" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100">打开对比</button>
+              </div>
+              <div id="compare-preview" class="mt-4 space-y-2 text-sm"></div>
+              <button id="compare-clear" class="mt-4 inline-flex rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100">清空对比队列</button>
+            </div>
+
+            <!-- Local profile status -->
+            <div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h2 class="text-sm font-semibold">本地档案</h2>
+                  <p id="profile-storage-status" class="mt-1 text-xs text-ink-600">未检测到已保存档案</p>
+                </div>
+                <span class="rounded-full bg-paper-100 px-3 py-1 text-[11px] font-medium text-ink-700">localStorage</span>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <button id="profile-save-side" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100">保存档案</button>
+                <button id="profile-clear-side" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 shadow-soft hover:bg-paper-100">清空档案</button>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main results (first on mobile) -->
+          <section class="order-1 space-y-4 lg:order-2 lg:col-span-9 xl:col-span-9">
+            <div class="rounded-xl border border-paper-200 bg-white px-4 py-3 shadow-soft">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div id="evaluation-banner" class="min-w-0 flex-1 text-sm text-ink-700">尚未评估。<button type="button" data-nav-view="assessment" class="ml-2 font-medium text-brand-600 hover:underline">去填写档案并评估 →</button></div>
+                <div class="flex flex-wrap gap-2 shrink-0" id="evaluation-counts-inline"></div>
+              </div>
+            </div>
+
+            <!-- PPP top 5 highlight -->
+            <section id="ppp-highlight" class="hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5 shadow-soft">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500 text-white">
+                      <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path d="M10 1.5 12.59 7.36l6.41.55-4.86 4.21 1.46 6.28L10 14.9l-5.6 3.5 1.46-6.28L1 7.91l6.41-.55L10 1.5Z"/></svg>
+                    </span>
+                    <h3 class="text-sm font-semibold text-emerald-900">性价比 TOP 5</h3>
+                  </div>
+                  <p class="mt-1 text-xs text-emerald-900/80">学费换算到人民币后 ÷ QS 排名启发性得分；学费越低、排名越靠前越好。</p>
+                </div>
+                <button id="ppp-sort-shortcut" class="rounded-lg border border-emerald-300 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800 shadow-soft hover:bg-emerald-50">按性价比排序</button>
+              </div>
+              <div id="ppp-highlight-list" class="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-5"></div>
+            </section>
+
+            <div id="table-view" class="rounded-2xl border border-paper-200 bg-white shadow-soft overflow-hidden">
+              <div class="scroll-shell" data-scroll-shell>
+                <div class="scroll-shell__notice">
+                  <span>列表支持 sticky 首列，项目名和院校会固定在左侧。</span>
+                </div>
+                <div class="scroll-shell__fade scroll-shell__fade--left"></div>
+                <div class="scroll-shell__fade scroll-shell__fade--right"></div>
+                <div class="overflow-x-auto nice-scrollbar smooth-x-scroll pb-3" data-scroll-area>
+                  <table class="min-w-[1120px] w-full border-separate border-spacing-0">
+                    <thead class="sticky top-0 z-20 border-b border-paper-200 bg-paper-50">
+                      <tr class="text-left text-xs font-semibold text-ink-700">
+                        <th class="sticky-first-col sticky-first-col--head min-w-[280px] px-4 py-3 whitespace-nowrap">项目名（含院校）</th>
+                        <th class="px-4 py-3 whitespace-nowrap">QS</th>
+                        <th class="px-4 py-3 whitespace-nowrap">学费</th>
+                        <th class="px-4 py-3 whitespace-nowrap">学制</th>
+                        <th class="px-4 py-3 whitespace-nowrap">项目梯队</th>
+                        <th class="px-4 py-3 whitespace-nowrap">地区 / 城市</th>
+                        <th class="px-4 py-3 whitespace-nowrap">申请截止</th>
+                        <th class="px-4 py-3 whitespace-nowrap">就业方向</th>
+                      </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-paper-200"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div id="cards-view" class="hidden grid-cols-1 gap-4 md:grid-cols-2"></div>
+
+            <!-- Footer tips -->
+            <div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft">
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper-100 text-ink-700">
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm.75-11.25a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0v-4.5Zm-.75 7.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/></svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-sm font-semibold text-ink-950">数据声明与使用提示</h3>
+                  <ul class="mt-2 space-y-1.5 text-sm text-ink-700">
+                    <li>· 学费 / 语言 / GPA / 截止等字段以学校官网为准，本工具会标注 last_verified 日期；如字段缺失会明确显示「数据缺失」，不会补造。</li>
+                    <li>· 匹配分档基于项目公开门槛 + QS 经验性画像，仅辅助排序，不代表真实录取概率。</li>
+                    <li>· 收藏、对比、档案、汇率偏好都仅保存在当前浏览器；切换浏览器或清缓存会丢失。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="border-t border-paper-200 bg-white">
+      <div class="mx-auto w-full max-w-[min(1720px,calc(100vw-32px))] px-4 py-6 text-xs text-ink-500 sm:px-6 lg:px-8">
+        <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>留学项目对比与背景评估助手 · 纯前端静态站 · 数据来源于学校官网公开页与公开汇率 API。</div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="footer-help" class="hover:text-ink-800">使用说明</button>
+            <span class="text-paper-300">·</span>
+            <button id="footer-sources" class="hover:text-ink-800">字段来源</button>
+            <span class="text-paper-300">·</span>
+            <span>申请前请以学校官网为准</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <button id="scroll-top" aria-label="回到顶部">
+    <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path d="M10 4a1 1 0 0 1 .71.29l5 5a1 1 0 0 1-1.42 1.42L11 7.41V16a1 1 0 1 1-2 0V7.41L5.71 10.7A1 1 0 1 1 4.29 9.3l5-5A1 1 0 0 1 10 4Z"/></svg>
+  </button>
+
+  <!-- ============ Modals ============ -->
+  <div id="modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-end justify-center p-0 sm:items-center sm:p-6">
+      <div class="w-full rounded-t-2xl border border-paper-200 bg-white shadow-pop sm:max-w-4xl sm:rounded-2xl">
+        <div class="flex items-start justify-between gap-3 border-b border-paper-200 px-5 py-4">
+          <div class="min-w-0">
+            <h3 id="modal-title" class="truncate text-base font-semibold">—</h3>
+            <p id="modal-sub" class="mt-1 truncate text-sm text-ink-600">—</p>
+          </div>
+          <button id="modal-close" class="shrink-0 rounded-lg border border-paper-200 px-3 py-2 text-sm font-medium hover:bg-paper-100">关闭</button>
+        </div>
+
+        <div class="max-h-[76vh] overflow-auto nice-scrollbar px-5 py-4">
+          <div class="rounded-xl border border-brand-100 bg-brand-50 p-3 text-sm text-ink-800">
+            <span class="font-semibold">说明：</span>
+            收藏、对比、背景评估都只发生在当前浏览器；学费、语言、截止等仍需以项目官网为准。
+          </div>
+          <div id="modal-body" class="mt-4 space-y-4"></div>
+        </div>
+
+        <div class="flex flex-col gap-3 border-t border-paper-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="text-xs text-ink-600">详情页支持收藏和加入对比；对比结果可在同屏表格中查看。</div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="modal-favorite" class="rounded-xl border border-paper-200 bg-white px-4 py-2 text-sm font-medium text-ink-900 hover:bg-paper-100">收藏</button>
+            <button id="modal-compare" class="rounded-xl border border-paper-200 bg-white px-4 py-2 text-sm font-medium text-ink-900 hover:bg-paper-100">加入对比</button>
+            <a id="modal-program-url" href="#" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-xl bg-ink-950 px-4 py-2 text-sm font-medium text-white hover:bg-ink-900">打开官网</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="help" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-end justify-center p-0 sm:items-center sm:p-6">
+      <div class="w-full rounded-t-2xl border border-paper-200 bg-white shadow-pop sm:max-w-2xl sm:rounded-2xl">
+        <div class="flex items-start justify-between gap-3 border-b border-paper-200 px-5 py-4">
+          <div>
+            <h3 class="text-base font-semibold">使用说明</h3>
+            <p class="mt-1 text-sm text-ink-600">先浏览项目，再按需评估、收藏和对比。</p>
+          </div>
+          <button id="help-close" class="shrink-0 rounded-lg border border-paper-200 px-3 py-2 text-sm font-medium hover:bg-paper-100">关闭</button>
+        </div>
+        <div class="space-y-3 px-5 py-4 text-sm text-ink-800">
+          <p><span class="font-semibold">背景评估：</span>保存或自动载入档案后，需要手动点击「保存并评估」，页面才会显示 Reach / Match / Safety 结果。</p>
+          <p><span class="font-semibold">收藏：</span>支持在表格、卡片、详情页中收藏项目，并在侧栏或收藏弹窗查看。</p>
+          <p><span class="font-semibold">对比：</span>最多保留 4 个项目，使用 sticky 首列横向对比学费、Deadline、就业、申请要求等字段。</p>
+          <p><span class="font-semibold">截止筛选：</span>顶部「本月 / 临近截止」chip 会快速筛出未来 45 天内有截止日期或仍处于 Rolling 阶段的项目。</p>
+          <p><span class="font-semibold">学费与汇率：</span>浏览页首屏不再展示汇率说明；切换到「¥ RMB」时仍按公开 API 参考中间价折算学费，具体以学校官网与缴费时实际汇率为准。</p>
+          <p><span class="font-semibold">性价比 PPP：</span>将学费换算为人民币后，除以基于 QS 排名的「声望分」（220 − 排名）；数值越低代表「每单位声望」花费越少。排序选「性价比 PPP」升序，或点击 TOP 5 区的「按性价比排序」。</p>
+          <div class="rounded-xl border border-paper-200 bg-paper-50 p-3 text-xs text-ink-700">
+            <p class="font-semibold">数据声明</p>
+            <p class="mt-1">页面不会连接真实后端服务；数据来自本地静态 JSON。若某字段缺失，会直接展示"数据缺失"，不会为了完整而补造。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sources" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-end justify-center p-0 sm:items-center sm:p-6">
+      <div class="w-full rounded-t-2xl border border-paper-200 bg-white shadow-pop sm:max-w-3xl sm:rounded-2xl">
+        <div class="flex items-start justify-between gap-3 border-b border-paper-200 px-5 py-4">
+          <div>
+            <h3 class="text-base font-semibold">字段来源清单</h3>
+            <p class="mt-1 text-sm text-ink-600">用于追踪字段来源与复核日期。</p>
+          </div>
+          <button id="sources-close" class="shrink-0 rounded-lg border border-paper-200 px-3 py-2 text-sm font-medium hover:bg-paper-100">关闭</button>
+        </div>
+        <div class="max-h-[75vh] overflow-auto nice-scrollbar px-5 py-4">
+          <pre id="sources-content" class="whitespace-pre-wrap rounded-xl border border-paper-200 bg-paper-50 p-4 text-xs text-ink-800">加载中…</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="favorites-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-end justify-center p-0 sm:items-center sm:p-6">
+      <div class="w-full rounded-t-2xl border border-paper-200 bg-white shadow-pop sm:max-w-3xl sm:rounded-2xl">
+        <div class="flex items-start justify-between gap-3 border-b border-paper-200 px-5 py-4">
+          <div>
+            <h3 class="text-base font-semibold">收藏项目</h3>
+            <p class="mt-1 text-sm text-ink-600">仅保存在当前浏览器。</p>
+          </div>
+          <button id="favorites-close" class="shrink-0 rounded-lg border border-paper-200 px-3 py-2 text-sm font-medium hover:bg-paper-100">关闭</button>
+        </div>
+        <div id="favorites-modal-body" class="max-h-[72vh] overflow-auto nice-scrollbar px-5 py-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="compare-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-end justify-center p-0 sm:items-center sm:p-6">
+      <div class="w-full rounded-t-2xl border border-paper-200 bg-white shadow-pop sm:max-w-6xl sm:rounded-2xl">
+        <div class="flex items-start justify-between gap-3 border-b border-paper-200 px-5 py-4">
+          <div>
+            <h3 class="text-base font-semibold">项目对比</h3>
+            <p class="mt-1 text-sm text-ink-600">同屏并列展示关键字段；最多 4 个项目。</p>
+          </div>
+          <button id="compare-close" class="shrink-0 rounded-lg border border-paper-200 px-3 py-2 text-sm font-medium hover:bg-paper-100">关闭</button>
+        </div>
+        <div id="compare-modal-body" class="max-h-[78vh] overflow-auto nice-scrollbar px-5 py-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./deadline-ui.js"></script>
+  <script src="./fx-ui.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

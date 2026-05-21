@@ -1,0 +1,21 @@
+# Backup files
+*.bak
+*.bak[0-9]*
+*.bak.*
+index.html.*.bak
+app.js.*.bak
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Tmp utilities
+/tmp/
+
+# Node & tooling
+node_modules/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
