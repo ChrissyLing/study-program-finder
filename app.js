@@ -586,6 +586,15 @@ function makeQsBadge (qs) {
   return `<span class="inline-flex items-center whitespace-nowrap rounded-full border border-paper-200 bg-paper-100 px-2.5 py-1 text-xs font-semibold text-ink-700">QS #${rank}</span>`
 }
 
+function makeUsNewsBadge (program) {
+  if (program?.region !== 'US') return `<span class="text-xs text-ink-500">—</span>`
+  const rank = program?.university?.us_rank?.rank
+  if (!isFiniteNumber(rank)) return makePill('US：数据缺失')
+  if (rank <= 10) return `<span class="inline-flex items-center whitespace-nowrap rounded-full border border-ink-950 bg-ink-950 px-2.5 py-1 text-xs font-semibold text-white">US #${rank}</span>`
+  if (rank <= 30) return `<span class="inline-flex items-center whitespace-nowrap rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">US #${rank}</span>`
+  return `<span class="inline-flex items-center whitespace-nowrap rounded-full border border-paper-200 bg-paper-100 px-2.5 py-1 text-xs font-semibold text-ink-700">US #${rank}</span>`
+}
+
 function makeSelectivityTierBadge (program) {
   const toneMap = {
     top: ['项目梯队：顶尖', 'tierTop'],
@@ -1159,6 +1168,7 @@ function sortPrograms (programs) {
   const factor = state.filters.sortDir === 'asc' ? 1 : -1
   const getValue = (program) => {
     if (state.filters.sortKey === 'qs') return program?.qs?.rank ?? Number.POSITIVE_INFINITY
+    if (state.filters.sortKey === 'usnews') return program?.region === 'US' ? (program?.university?.us_rank?.rank ?? Number.POSITIVE_INFINITY) : Number.POSITIVE_INFINITY
     if (state.filters.sortKey === 'tuition') return program?.tuition?.amount ?? Number.POSITIVE_INFINITY
     if (state.filters.sortKey === 'duration') return program?.duration?.value ?? Number.POSITIVE_INFINITY
     if (state.filters.sortKey === 'deadline') return program?.__deadlineMs ?? Number.POSITIVE_INFINITY
@@ -1244,7 +1254,7 @@ function renderRegionChip (region, regionLabel) {
 function renderTable (programs) {
   if (!programs.length) {
     $('#table-body').innerHTML = `
-      <tr><td colspan="8" class="px-6 py-16">
+      <tr><td colspan="9" class="px-6 py-16">
         <div class="mx-auto max-w-sm text-center">
           <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-paper-100 text-ink-600">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -1272,6 +1282,7 @@ function renderTable (programs) {
         </div>
       </td>
       <td class="px-4 py-3 align-top whitespace-nowrap">${makeQsBadge(program.qs)}</td>
+      <td class="px-4 py-3 align-top whitespace-nowrap">${makeUsNewsBadge(program)}</td>
       <td class="px-4 py-3 align-top whitespace-nowrap">${renderTuitionDisplay(program.tuition, { context: 'table' })}</td>
       <td class="px-4 py-3 align-top whitespace-nowrap text-sm font-medium text-ink-900">${escapeHtml(formatDuration(program.duration))}</td>
       <td class="px-4 py-3 align-top">
@@ -1316,7 +1327,10 @@ function renderCards (programs) {
           <div class="mt-1 text-xs text-ink-600">${escapeHtml(program.__uni)} · ${escapeHtml(program.city || '城市未知')}</div>
           <div class="mt-2 flex flex-wrap items-center gap-1.5">${renderRegionChip(program.region, program.__regionLabel)}${renderDeadlineBadge(program)}</div>
         </div>
-        <div class="shrink-0">${makeQsBadge(program.qs)}</div>
+        <div class="shrink-0 flex flex-col items-end gap-1">
+          ${makeQsBadge(program.qs)}
+          ${program.region === 'US' ? makeUsNewsBadge(program) : ''}
+        </div>
       </div>
       <div class="mt-4 grid grid-cols-2 gap-2 text-sm pl-2">
         <div class="rounded-xl border border-paper-200 bg-paper-50 px-3 py-2">${renderTuitionDisplay(program.tuition, { context: 'card' })}</div>
@@ -1598,6 +1612,7 @@ function renderCompareModalBody () {
   const rows = [
     ['项目 / 院校', (program) => `${program.__name}\n${program.__uni}`],
     ['QS', (program) => program?.qs?.rank ? `#${program.qs.rank}` : '数据缺失'],
+    ['US 排名（US News）', (program) => program?.region === 'US' ? (program?.university?.us_rank?.rank ? `#${program.university.us_rank.rank}` : '数据缺失') : '—'],
     ['地区 / 城市', (program) => `${program.__regionLabel} · ${program.city || '城市未知'}`],
     ['学费', (program) => formatTuitionPlain(program.tuition)],
     ['学制', (program) => formatDuration(program.duration)],
@@ -1837,12 +1852,32 @@ async function main () {
   }
 
   try {
-    const res = await fetch('./data/programs.json', { cache: 'no-store' })
-    if (!res.ok) throw new Error(`无法加载项目数据（HTTP ${res.status}）。请确认在 study-program-finder 目录下启动服务器。`)
-    const payload = await res.json()
+    const res = await fetch('./data/programs.json')
+    const raw = await res.text()
+    if (!res.ok) {
+      let message = `无法加载项目数据（HTTP ${res.status}）。`
+      try {
+        const errBody = JSON.parse(raw)
+        if (errBody?.error === 'usage_exceeded' || /usage exceeded/i.test(errBody?.message || '')) {
+          message = '线上站点托管平台（Netlify）本月流量/用量已超限，暂时返回 503，与是否填写背景信息无关。请在 Netlify 控制台查看用量，或改用本地预览。'
+        }
+      } catch {
+        // not JSON error body
+      }
+      if (res.status === 503 && !message.includes('Netlify')) {
+        message += ' 若使用 study-program-finder.netlify.app，多为托管额度问题；本地请在项目目录运行 python3 -m http.server 8000。'
+      } else if (res.status !== 503) {
+        message += ' 本地预览请在 study-program-finder 目录运行：python3 -m http.server 8000'
+      }
+      throw new Error(message)
+    }
+    const payload = JSON.parse(raw)
     state.programs = (payload.programs || []).map(normalizeProgram)
   } catch (error) {
-    loading.innerHTML = `<div class="rounded-2xl border border-paper-200 bg-white p-6 shadow-soft"><div class="text-sm font-semibold">加载失败</div><pre class="mt-2 whitespace-pre-wrap text-xs text-ink-700">${escapeHtml(String(error))}</pre></div>`
+    const hint = error?.message?.includes('Netlify')
+      ? '<p class="mt-3 text-sm text-ink-600">本地预览：<code class="rounded bg-paper-100 px-1.5 py-0.5 text-xs">cd study-program-finder && python3 -m http.server 8000</code>，再打开 <code class="rounded bg-paper-100 px-1.5 py-0.5 text-xs">http://127.0.0.1:8000/</code></p>'
+      : '<p class="mt-3 text-sm text-ink-600">请确认未用 file:// 直接打开；在项目目录启动本地 HTTP 服务后再访问。</p>'
+    loading.innerHTML = `<div class="rounded-2xl border border-paper-200 bg-white p-6 shadow-soft"><div class="text-sm font-semibold">加载失败</div><p class="mt-2 text-sm text-ink-700">${escapeHtml(String(error?.message || error))}</p>${hint}</div>`
     return
   }
 

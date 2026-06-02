@@ -2,7 +2,7 @@
   "meta": {
     "phase": "Phase 4",
     "scope_note": "共 189 个项目；覆盖商科、计算机、传媒、数据科学、交互设计、法律、教育等；UK/US/HK/SG；官网公开字段 + 经验性评估。",
-    "last_built_at": "2026-05-19",
+    "last_built_at": "2026-06-02",
     "disclaimer": "申请难度评估仅基于项目官网公开要求 + 基于 QS 排名与地区规则的经验性画像，不构成录取预测；学费/语言/截止日期等请以官网为准，申请前复核。"
   },
   "programs": [
@@ -395,7 +395,14 @@
       "city": "New York City",
       "university": {
         "name_en": "Columbia University",
-        "name_zh": "哥伦比亚大学"
+        "name_zh": "哥伦比亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 15,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics (MSBA)",
@@ -2247,7 +2254,14 @@
       "city": "Cambridge",
       "university": {
         "name_en": "Massachusetts Institute of Technology (MIT)",
-        "name_zh": "麻省理工学院"
+        "name_zh": "麻省理工学院",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 2,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Business Analytics (MBAn)",
@@ -2371,7 +2385,14 @@
       "city": "Pittsburgh",
       "university": {
         "name_en": "Carnegie Mellon University",
-        "name_zh": "卡内基梅隆大学"
+        "name_zh": "卡内基梅隆大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Science in Business Analytics (MSBA)",
@@ -2517,7 +2538,14 @@
       "city": "Pittsburgh",
       "university": {
         "name_en": "Carnegie Mellon University",
-        "name_zh": "卡内基梅隆大学"
+        "name_zh": "卡内基梅隆大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Information Systems Management (MISM)",
@@ -2656,7 +2684,14 @@
       "city": "Durham",
       "university": {
         "name_en": "Duke University",
-        "name_zh": "杜克大学"
+        "name_zh": "杜克大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Quantitative Management (MQM): Business Analytics",
@@ -2803,7 +2838,14 @@
       "city": "New York City",
       "university": {
         "name_en": "New York University (NYU)",
-        "name_zh": "纽约大学"
+        "name_zh": "纽约大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics and AI (MSBAi)",
@@ -2945,7 +2987,14 @@
       "city": "New York City & Shanghai",
       "university": {
         "name_en": "New York University (NYU)",
-        "name_zh": "纽约大学"
+        "name_zh": "纽约大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing and Retail Science (MRS)",
@@ -3081,7 +3130,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California (USC)",
-        "name_zh": "南加州大学"
+        "name_zh": "南加州大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics (MSBA)",
@@ -3218,7 +3274,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California (USC)",
-        "name_zh": "南加州大学"
+        "name_zh": "南加州大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing",
@@ -3352,7 +3415,14 @@
       "city": "Ann Arbor",
       "university": {
         "name_en": "University of Michigan-Ann Arbor",
-        "name_zh": "密歇根大学安娜堡分校"
+        "name_zh": "密歇根大学安娜堡分校",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Business Analytics (MBAn)",
@@ -3505,7 +3575,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of California, Los Angeles (UCLA)",
-        "name_zh": "加州大学洛杉矶分校"
+        "name_zh": "加州大学洛杉矶分校",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 17,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics (MSBA)",
@@ -3639,7 +3716,14 @@
       "city": "Evanston",
       "university": {
         "name_en": "Northwestern University",
-        "name_zh": "西北大学"
+        "name_zh": "西北大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Machine Learning and Data Science (MLDS)",
@@ -3768,7 +3852,14 @@
       "city": "Austin",
       "university": {
         "name_en": "The University of Texas at Austin",
-        "name_zh": "德克萨斯大学奥斯汀分校"
+        "name_zh": "德克萨斯大学奥斯汀分校",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 30,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics (MSBA)",
@@ -3910,7 +4001,14 @@
       "city": "Atlanta",
       "university": {
         "name_en": "Emory University",
-        "name_zh": "埃默里大学"
+        "name_zh": "埃默里大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 24,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics (MSBA)",
@@ -5826,7 +5924,14 @@
       "city": "Ithaca",
       "university": {
         "name_en": "Cornell University",
-        "name_zh": "康奈尔大学"
+        "name_zh": "康奈尔大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 12,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MPS in Applied Economics and Management",
@@ -5976,7 +6081,14 @@
       "city": "Ithaca",
       "university": {
         "name_en": "Cornell University",
-        "name_zh": "康奈尔大学"
+        "name_zh": "康奈尔大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 12,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MPS in Management",
@@ -6124,7 +6236,14 @@
       "city": "New York City",
       "university": {
         "name_en": "Cornell University",
-        "name_zh": "康奈尔大学"
+        "name_zh": "康奈尔大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 12,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics",
@@ -6272,7 +6391,14 @@
       "city": "New Haven",
       "university": {
         "name_en": "Yale University",
-        "name_zh": "耶鲁大学"
+        "name_zh": "耶鲁大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 4,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Advanced Management (MAM)",
@@ -6416,7 +6542,14 @@
       "city": "New Haven",
       "university": {
         "name_en": "Yale University",
-        "name_zh": "耶鲁大学"
+        "name_zh": "耶鲁大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 4,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MMS in Asset Management",
@@ -6543,7 +6676,14 @@
       "city": "Baltimore / Washington D.C.",
       "university": {
         "name_en": "Johns Hopkins University",
-        "name_zh": "约翰霍普金斯大学"
+        "name_zh": "约翰霍普金斯大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Finance",
@@ -6681,7 +6821,14 @@
       "city": "Baltimore / Washington D.C.",
       "university": {
         "name_en": "Johns Hopkins University",
-        "name_zh": "约翰霍普金斯大学"
+        "name_zh": "约翰霍普金斯大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing",
@@ -6819,7 +6966,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California",
-        "name_zh": "南加州大学"
+        "name_zh": "南加州大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Finance",
@@ -6963,7 +7117,14 @@
       "city": "Charlottesville",
       "university": {
         "name_en": "University of Virginia",
-        "name_zh": "弗吉尼亚大学"
+        "name_zh": "弗吉尼亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 26,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "M.S. in Commerce",
@@ -11221,7 +11382,14 @@
       "city": "Evanston",
       "university": {
         "name_en": "Northwestern University",
-        "name_zh": "西北大学"
+        "name_zh": "西北大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Integrated Marketing Communications (IMC)",
@@ -11349,7 +11517,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California (USC)",
-        "name_zh": "南加州大学（USC）"
+        "name_zh": "南加州大学（USC）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing Analytics",
@@ -11472,7 +11647,14 @@
       "city": "Washington, D.C.",
       "university": {
         "name_en": "Georgetown University",
-        "name_zh": "乔治城大学"
+        "name_zh": "乔治城大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 24,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing",
@@ -11586,7 +11768,14 @@
       "city": "Bloomington",
       "university": {
         "name_en": "Indiana University Bloomington",
-        "name_zh": "印第安纳大学伯明顿分校"
+        "name_zh": "印第安纳大学伯明顿分校",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 73,
+          "source_url": "https://www.idsnews.com/article/2025/09/iu-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing",
@@ -11700,7 +11889,14 @@
       "city": "Charlottesville",
       "university": {
         "name_en": "University of Virginia",
-        "name_zh": "弗吉尼亚大学"
+        "name_zh": "弗吉尼亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 26,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Commerce — Marketing & Management Track",
@@ -11815,7 +12011,14 @@
       "city": "Madison",
       "university": {
         "name_en": "University of Wisconsin-Madison",
-        "name_zh": "威斯康星大学麦迪逊分校"
+        "name_zh": "威斯康星大学麦迪逊分校",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 36,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Finance",
@@ -11930,7 +12133,14 @@
       "city": "Chestnut Hill",
       "university": {
         "name_en": "Boston College",
-        "name_zh": "波士顿学院"
+        "name_zh": "波士顿学院",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 36,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Finance",
@@ -12045,7 +12255,14 @@
       "city": "New York",
       "university": {
         "name_en": "New York University (NYU)",
-        "name_zh": "纽约大学（NYU）"
+        "name_zh": "纽约大学（NYU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics",
@@ -12167,7 +12384,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California (USC)",
-        "name_zh": "南加州大学（USC）"
+        "name_zh": "南加州大学（USC）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics",
@@ -12282,7 +12506,14 @@
       "city": "Washington, D.C.",
       "university": {
         "name_en": "Georgetown University",
-        "name_zh": "乔治城大学"
+        "name_zh": "乔治城大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 24,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Business Analytics",
@@ -12397,7 +12628,14 @@
       "city": "New York",
       "university": {
         "name_en": "Columbia University",
-        "name_zh": "哥伦比亚大学"
+        "name_zh": "哥伦比亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 15,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Marketing Science",
@@ -14365,7 +14603,14 @@
       "city": "Pittsburgh",
       "university": {
         "name_en": "Carnegie Mellon University",
-        "name_zh": "卡内基梅隆大学（CMU）"
+        "name_zh": "卡内基梅隆大学（CMU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Science in Computer Science (MSCS)",
@@ -14479,7 +14724,14 @@
       "city": "New York",
       "university": {
         "name_en": "New York University (NYU)",
-        "name_zh": "纽约大学（NYU）"
+        "name_zh": "纽约大学（NYU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Data Science",
@@ -14594,7 +14846,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California (USC)",
-        "name_zh": "南加州大学（USC）"
+        "name_zh": "南加州大学（USC）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MA in Communication Management",
@@ -14710,7 +14969,14 @@
       "city": "Atlanta",
       "university": {
         "name_en": "Georgia Institute of Technology",
-        "name_zh": "佐治亚理工学院"
+        "name_zh": "佐治亚理工学院",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Computer Science",
@@ -14824,7 +15090,14 @@
       "city": "Evanston",
       "university": {
         "name_en": "Northwestern University",
-        "name_zh": "西北大学"
+        "name_zh": "西北大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Journalism",
@@ -16881,7 +17154,14 @@
       "city": "New York",
       "university": {
         "name_en": "New York University (NYU)",
-        "name_zh": "纽约大学（NYU）"
+        "name_zh": "纽约大学（NYU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "LLM (Master of Laws)",
@@ -16995,7 +17275,14 @@
       "city": "New York",
       "university": {
         "name_en": "Columbia University",
-        "name_zh": "哥伦比亚大学"
+        "name_zh": "哥伦比亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 15,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "LLM (Master of Laws)",
@@ -17109,7 +17396,14 @@
       "city": "Washington DC",
       "university": {
         "name_en": "Georgetown University",
-        "name_zh": "乔治城大学"
+        "name_zh": "乔治城大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 24,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "LLM in International Business and Economic Law",
@@ -17224,7 +17518,14 @@
       "city": "Cambridge",
       "university": {
         "name_en": "Harvard University",
-        "name_zh": "哈佛大学"
+        "name_zh": "哈佛大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 3,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Ed.M. in Education Policy and Analysis",
@@ -17338,7 +17639,14 @@
       "city": "Stanford",
       "university": {
         "name_en": "Stanford University",
-        "name_zh": "斯坦福大学"
+        "name_zh": "斯坦福大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 4,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MA in Education (Policy, Organization and Leadership Studies)",
@@ -17452,7 +17760,14 @@
       "city": "New York",
       "university": {
         "name_en": "Columbia University",
-        "name_zh": "哥伦比亚大学"
+        "name_zh": "哥伦比亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 15,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MA in TESOL (Teaching English to Speakers of Other Languages)",
@@ -17566,7 +17881,14 @@
       "city": "Philadelphia",
       "university": {
         "name_en": "University of Pennsylvania",
-        "name_zh": "宾夕法尼亚大学"
+        "name_zh": "宾夕法尼亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "M.S.Ed. in Teaching, Learning, and Leadership",
@@ -18934,7 +19256,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of Southern California (USC)",
-        "name_zh": "南加州大学（USC）"
+        "name_zh": "南加州大学（USC）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 28,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "LLM (Master of Laws)",
@@ -19048,7 +19377,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of California, Los Angeles (UCLA)",
-        "name_zh": "加州大学洛杉矶分校（UCLA）"
+        "name_zh": "加州大学洛杉矶分校（UCLA）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 17,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "M.Ed. in Educational Leadership",
@@ -19961,7 +20297,14 @@
       "city": "Berkeley",
       "university": {
         "name_en": "University of California, Berkeley",
-        "name_zh": "加州大学伯克利分校（Berkeley）"
+        "name_zh": "加州大学伯克利分校（Berkeley）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 15,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Information and Data Science (MIDS)",
@@ -20075,7 +20418,14 @@
       "city": "Pittsburgh",
       "university": {
         "name_en": "Carnegie Mellon University (CMU)",
-        "name_zh": "卡内基梅隆大学（CMU）"
+        "name_zh": "卡内基梅隆大学（CMU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Science in Data Science (MSDS)",
@@ -20190,7 +20540,14 @@
       "city": "Durham",
       "university": {
         "name_en": "Duke University",
-        "name_zh": "杜克大学"
+        "name_zh": "杜克大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 7,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master in Interdisciplinary Data Science (MIDS)",
@@ -20304,7 +20661,14 @@
       "city": "Los Angeles",
       "university": {
         "name_en": "University of California, Los Angeles (UCLA)",
-        "name_zh": "加州大学洛杉矶分校（UCLA）"
+        "name_zh": "加州大学洛杉矶分校（UCLA）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 17,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Science in Data Science Engineering",
@@ -21333,7 +21697,14 @@
       "city": "New York",
       "university": {
         "name_en": "Columbia University",
-        "name_zh": "哥伦比亚大学"
+        "name_zh": "哥伦比亚大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 15,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Journalism",
@@ -21447,7 +21818,14 @@
       "city": "New York",
       "university": {
         "name_en": "New York University (NYU)",
-        "name_zh": "纽约大学（NYU）"
+        "name_zh": "纽约大学（NYU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MA in Journalism",
@@ -21561,7 +21939,14 @@
       "city": "Washington DC",
       "university": {
         "name_en": "Georgetown University",
-        "name_zh": "乔治城大学"
+        "name_zh": "乔治城大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 24,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MA in Communication, Culture and Technology (CCT)",
@@ -22362,7 +22747,14 @@
       "city": "Pittsburgh",
       "university": {
         "name_en": "Carnegie Mellon University (CMU)",
-        "name_zh": "卡内基梅隆大学（CMU）"
+        "name_zh": "卡内基梅隆大学（CMU）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Human-Computer Interaction (MHCI)",
@@ -22476,7 +22868,14 @@
       "city": "Atlanta",
       "university": {
         "name_en": "Georgia Institute of Technology",
-        "name_zh": "佐治亚理工学院（Georgia Tech）"
+        "name_zh": "佐治亚理工学院（Georgia Tech）",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 32,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Human-Computer Interaction",
@@ -22590,7 +22989,14 @@
       "city": "Seattle",
       "university": {
         "name_en": "University of Washington",
-        "name_zh": "华盛顿大学"
+        "name_zh": "华盛顿大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 42,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "MS in Human Centered Design and Engineering (HCDE)",
@@ -22704,7 +23110,14 @@
       "city": "Ann Arbor",
       "university": {
         "name_en": "University of Michigan",
-        "name_zh": "密歇根大学"
+        "name_zh": "密歇根大学",
+        "us_rank": {
+          "system": "U.S. News Best Colleges — National Universities",
+          "year": 2026,
+          "rank": 20,
+          "source_url": "https://www.collegekickstart.com/blog/item/u-s-news-world-report-posts-2026-college-rankings",
+          "last_verified": "2026-06-02"
+        }
       },
       "program": {
         "name_en": "Master of Science in Information (MSI) — HCI Specialization",
