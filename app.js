@@ -92,6 +92,10 @@ const state = {
   currentMessageTimer: null,
   latestAssessmentResults: new Map(),
   hasEvaluated: false,
+  pppFilters: {
+    regions: new Set(),
+    tiers: new Set()
+  },
   filters: {
     q: '',
     regions: new Set(),
@@ -177,7 +181,35 @@ function setupViewShells () {
 
   const shells = {
     assessment: '<div class="space-y-4"><h2 class="text-base font-semibold">申请者档案与匹配评估</h2><p class="text-sm text-ink-600">填写档案后点击「保存并评估」，浏览页会显示 Reach / Match / Safety 分档。</p><div id="assessment-page-slot"></div></div>',
-    ppp: '<div class="space-y-4"><h2 class="text-base font-semibold">学费性价比（PPP）</h2><p class="text-sm text-ink-600">学费换算人民币后 ÷ QS 声望分，越低越划算。全库分档为 S / A / B / C。</p><div id="ppp-page-slot"></div></div>',
+    ppp: `
+      <div class="space-y-4">
+        <div>
+          <h2 class="text-base font-semibold">学费性价比（PPP）</h2>
+          <p class="mt-1 text-sm text-ink-600">学费换算人民币后 ÷ QS 声望分，越低越划算。全库分档为 S / A / B / C。</p>
+        </div>
+        <div class="rounded-2xl border border-paper-200 bg-white p-4 shadow-soft space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="text-sm font-semibold text-ink-950">筛选</div>
+            <button id="ppp-filter-reset" type="button" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 hover:bg-paper-100">重置</button>
+          </div>
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div>
+              <div class="text-xs font-semibold text-ink-700">地区</div>
+              <div id="ppp-filter-regions" class="mt-2 flex flex-wrap gap-2"></div>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-ink-700">PPP 档位</div>
+              <div id="ppp-filter-tiers" class="mt-2 flex flex-wrap gap-2"></div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-ink-600">
+            <div>提示：只会统计学费与 QS 均完整、可计算 PPP 的项目。</div>
+            <div class="rounded-full bg-paper-100 px-3 py-1 text-xs font-medium text-ink-700">命中 <span id="ppp-filter-count">—</span> 个</div>
+          </div>
+        </div>
+        <div id="ppp-page-slot" class="space-y-3"></div>
+      </div>
+    `,
     favorites: '<div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft"><h2 class="text-base font-semibold">收藏项目</h2><p class="mt-1 text-xs text-ink-600">仅保存在当前浏览器</p><div id="favorites-page-body" class="mt-4 space-y-3"></div></div>',
     compare: '<div class="rounded-2xl border border-paper-200 bg-white p-5 shadow-soft"><div class="flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-base font-semibold">项目对比</h2><p class="mt-1 text-xs text-ink-600">最多 4 个项目</p></div><button id="compare-clear-page" type="button" class="rounded-lg border border-paper-200 bg-white px-3 py-2 text-xs font-medium text-ink-900 hover:bg-paper-100">清空队列</button></div><div id="compare-page-body" class="mt-4"></div></div>'
   }
@@ -244,7 +276,13 @@ function syncAppView () {
     renderComparePage()
     bindScrollShells($('#view-compare'))
   }
-  if (view === 'ppp') renderPppHighlight()
+  if (view === 'ppp') {
+    renderPppHighlight()
+    bindPppPageFilters()
+    renderPppPageFilters()
+    renderPppPageList()
+    bindScrollShells($('#view-ppp'))
+  }
   if (view === 'browse') {
     apply()
     scrollBrowseListIntoView()
@@ -1518,6 +1556,116 @@ function renderPppHighlight () {
       </button>
     `
   }).join('')
+}
+
+function renderPppPageFilters () {
+  const regionsWrap = $('#ppp-filter-regions')
+  const tiersWrap = $('#ppp-filter-tiers')
+  if (!regionsWrap || !tiersWrap) return
+
+  const regionOptions = Object.keys(REGION_LABELS)
+  regionsWrap.innerHTML = regionOptions.map((region) => {
+    const active = state.pppFilters.regions.has(region)
+    return `<button type="button" data-ppp-region="${escapeHtml(region)}" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium shadow-soft transition ${active ? 'border-ink-950 bg-ink-950 text-white' : 'border-paper-200 bg-white text-ink-800 hover:bg-paper-100'}">${escapeHtml(REGION_LABELS[region] || region)}</button>`
+  }).join('')
+
+  const tierOptions = ['S', 'A', 'B', 'C']
+  tiersWrap.innerHTML = tierOptions.map((tier) => {
+    const active = state.pppFilters.tiers.has(tier)
+    const style = PPP_TIER_STYLES[tier] || { label: `${tier} 档`, cls: 'border-paper-200 bg-white text-ink-800' }
+    return `<button type="button" data-ppp-tier="${escapeHtml(tier)}" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold shadow-soft transition ${active ? 'border-ink-950 bg-ink-950 text-white' : style.cls + ' hover:opacity-90'}">${escapeHtml(style.label)}</button>`
+  }).join('')
+}
+
+function getPppFilteredPrograms () {
+  let next = state.programs.filter((program) => program.__ppp)
+  if (state.pppFilters.regions.size) next = next.filter((program) => state.pppFilters.regions.has(program.region))
+  if (state.pppFilters.tiers.size) next = next.filter((program) => state.pppFilters.tiers.has(program.__ppp.tier))
+  return next.sort((a, b) => a.__ppp.valueIndex - b.__ppp.valueIndex)
+}
+
+function renderPppPageList () {
+  const slot = $('#ppp-page-slot')
+  const countEl = $('#ppp-filter-count')
+  if (!slot) return
+
+  const ranked = getPppFilteredPrograms()
+  if (countEl) countEl.textContent = String(ranked.length)
+
+  if (!ranked.length) {
+    slot.innerHTML = '<div class="rounded-2xl border border-dashed border-paper-200 bg-paper-50 p-6 text-sm text-ink-600">当前筛选条件下没有可计算 PPP 的项目。你可以清空筛选，或切换地区/档位。</div>'
+    return
+  }
+
+  slot.innerHTML = `
+    <div class="rounded-2xl border border-paper-200 bg-white shadow-soft overflow-hidden">
+      <div class="overflow-x-auto nice-scrollbar smooth-x-scroll">
+        <table class="min-w-[980px] w-full border-separate border-spacing-0">
+          <thead class="border-b border-paper-200 bg-paper-50">
+            <tr class="text-left text-xs font-semibold text-ink-700">
+              <th class="px-4 py-3 whitespace-nowrap">#</th>
+              <th class="px-4 py-3 whitespace-nowrap">项目</th>
+              <th class="px-4 py-3 whitespace-nowrap">地区</th>
+              <th class="px-4 py-3 whitespace-nowrap">PPP</th>
+              <th class="px-4 py-3 whitespace-nowrap">学费（约 RMB）</th>
+              <th class="px-4 py-3 whitespace-nowrap">QS</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ranked.map((program) => {
+              const cny = getTuitionCny(program)
+              const qs = program?.qs?.rank
+              return `
+                <tr class="table-row cursor-pointer border-t border-paper-200 align-top hover:bg-paper-50" data-open-program="${escapeHtml(program.id)}">
+                  <td class="px-4 py-3 text-sm font-semibold text-ink-900 whitespace-nowrap">#${escapeHtml(program.__ppp.position)}</td>
+                  <td class="px-4 py-3">
+                    <div class="text-sm font-semibold text-ink-950">${escapeHtml(program.__name)}</div>
+                    <div class="mt-1 text-xs text-ink-600">${escapeHtml(program.__uni)} · ${escapeHtml(program.city || '城市未知')}</div>
+                    <div class="mt-2 flex flex-wrap gap-2">${renderPppBadge(program)}${program.__tags.slice(0, 3).map((tag) => makePill(tag)).join('')}</div>
+                  </td>
+                  <td class="px-4 py-3 text-sm text-ink-700 whitespace-nowrap">${escapeHtml(program.__regionLabel)}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">${renderPppBadge(program, true)}</td>
+                  <td class="px-4 py-3 text-sm font-medium text-ink-900 whitespace-nowrap">${escapeHtml(formatCnyShort(cny))}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">${makeQsBadge(program.qs)}</td>
+                </tr>
+              `
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `
+}
+
+function bindPppPageFilters () {
+  const root = $('#view-ppp')
+  if (!root || root.dataset.pppBound === 'true') return
+  root.dataset.pppBound = 'true'
+
+  root.addEventListener('click', (event) => {
+    const btn = event.target?.closest?.('[data-ppp-region],[data-ppp-tier]')
+    if (!btn) return
+
+    const region = btn.getAttribute('data-ppp-region')
+    const tier = btn.getAttribute('data-ppp-tier')
+    if (region) {
+      if (state.pppFilters.regions.has(region)) state.pppFilters.regions.delete(region)
+      else state.pppFilters.regions.add(region)
+    }
+    if (tier) {
+      if (state.pppFilters.tiers.has(tier)) state.pppFilters.tiers.delete(tier)
+      else state.pppFilters.tiers.add(tier)
+    }
+    renderPppPageFilters()
+    renderPppPageList()
+  })
+
+  $('#ppp-filter-reset')?.addEventListener('click', () => {
+    state.pppFilters.regions = new Set()
+    state.pppFilters.tiers = new Set()
+    renderPppPageFilters()
+    renderPppPageList()
+  })
 }
 
 function renderHeroStats () {
