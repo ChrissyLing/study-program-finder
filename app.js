@@ -94,7 +94,8 @@ const state = {
   hasEvaluated: false,
   pppFilters: {
     regions: new Set(),
-    tiers: new Set()
+    tiers: new Set(),
+    directions: new Set()
   },
   filters: {
     q: '',
@@ -201,6 +202,13 @@ function setupViewShells () {
               <div class="text-xs font-semibold text-ink-700">PPP 档位</div>
               <div id="ppp-filter-tiers" class="mt-2 flex flex-wrap gap-2"></div>
             </div>
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="text-xs font-semibold text-ink-700">专业 / 方向</div>
+              <span id="ppp-filter-directions-hint" class="text-[11px] text-ink-500">可多选</span>
+            </div>
+            <div id="ppp-filter-directions" class="mt-2 flex flex-wrap gap-2"></div>
           </div>
           <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-ink-600">
             <div>提示：只会统计学费与 QS 均完整、可计算 PPP 的项目。</div>
@@ -1558,10 +1566,15 @@ function renderPppHighlight () {
   }).join('')
 }
 
+function getPppEligiblePrograms () {
+  return state.programs.filter((program) => program.__ppp)
+}
+
 function renderPppPageFilters () {
   const regionsWrap = $('#ppp-filter-regions')
   const tiersWrap = $('#ppp-filter-tiers')
-  if (!regionsWrap || !tiersWrap) return
+  const directionsWrap = $('#ppp-filter-directions')
+  if (!regionsWrap || !tiersWrap || !directionsWrap) return
 
   const regionOptions = Object.keys(REGION_LABELS)
   regionsWrap.innerHTML = regionOptions.map((region) => {
@@ -1575,12 +1588,39 @@ function renderPppPageFilters () {
     const style = PPP_TIER_STYLES[tier] || { label: `${tier} 档`, cls: 'border-paper-200 bg-white text-ink-800' }
     return `<button type="button" data-ppp-tier="${escapeHtml(tier)}" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold shadow-soft transition ${active ? 'border-ink-950 bg-ink-950 text-white' : style.cls + ' hover:opacity-90'}">${escapeHtml(style.label)}</button>`
   }).join('')
+
+  const pppPrograms = getPppEligiblePrograms()
+  const directionCount = new Map()
+  pppPrograms.forEach((program) => {
+    program.__tags.forEach((tag) => {
+      directionCount.set(tag, (directionCount.get(tag) || 0) + 1)
+    })
+  })
+  directionsWrap.innerHTML = DIRECTION_OPTIONS.map((option) => {
+    const count = directionCount.get(option.value) || 0
+    const active = state.pppFilters.directions.has(option.value)
+    const disabled = count === 0
+    return `<button type="button" data-ppp-direction="${escapeHtml(option.value)}" ${disabled ? 'disabled' : ''} class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium shadow-soft transition ${disabled ? 'cursor-not-allowed border-paper-200 bg-paper-50 text-ink-400' : active ? 'border-ink-950 bg-ink-950 text-white' : 'border-paper-200 bg-white text-ink-800 hover:bg-paper-100'}">
+      <span>${escapeHtml(option.label)}</span>
+      <span class="rounded-full ${active ? 'bg-white/15 text-white' : 'bg-paper-100 text-ink-600'} px-1.5 py-0.5 text-[10px] font-semibold">${count}</span>
+    </button>`
+  }).join('')
+
+  const hint = $('#ppp-filter-directions-hint')
+  if (hint) {
+    hint.textContent = state.pppFilters.directions.size
+      ? `已选 ${state.pppFilters.directions.size} 个方向`
+      : '可多选'
+  }
 }
 
 function getPppFilteredPrograms () {
-  let next = state.programs.filter((program) => program.__ppp)
+  let next = getPppEligiblePrograms()
   if (state.pppFilters.regions.size) next = next.filter((program) => state.pppFilters.regions.has(program.region))
   if (state.pppFilters.tiers.size) next = next.filter((program) => state.pppFilters.tiers.has(program.__ppp.tier))
+  if (state.pppFilters.directions.size) {
+    next = next.filter((program) => program.__tags.some((tag) => state.pppFilters.directions.has(tag)))
+  }
   return next.sort((a, b) => a.__ppp.valueIndex - b.__ppp.valueIndex)
 }
 
@@ -1593,7 +1633,7 @@ function renderPppPageList () {
   if (countEl) countEl.textContent = String(ranked.length)
 
   if (!ranked.length) {
-    slot.innerHTML = '<div class="rounded-2xl border border-dashed border-paper-200 bg-paper-50 p-6 text-sm text-ink-600">当前筛选条件下没有可计算 PPP 的项目。你可以清空筛选，或切换地区/档位。</div>'
+    slot.innerHTML = '<div class="rounded-2xl border border-dashed border-paper-200 bg-paper-50 p-6 text-sm text-ink-600">当前筛选条件下没有可计算 PPP 的项目。你可以点击「重置」，或调整地区 / 专业方向 / PPP 档位。</div>'
     return
   }
 
@@ -1643,11 +1683,12 @@ function bindPppPageFilters () {
   root.dataset.pppBound = 'true'
 
   root.addEventListener('click', (event) => {
-    const btn = event.target?.closest?.('[data-ppp-region],[data-ppp-tier]')
-    if (!btn) return
+    const btn = event.target?.closest?.('[data-ppp-region],[data-ppp-tier],[data-ppp-direction]')
+    if (!btn || btn.disabled) return
 
     const region = btn.getAttribute('data-ppp-region')
     const tier = btn.getAttribute('data-ppp-tier')
+    const direction = btn.getAttribute('data-ppp-direction')
     if (region) {
       if (state.pppFilters.regions.has(region)) state.pppFilters.regions.delete(region)
       else state.pppFilters.regions.add(region)
@@ -1656,6 +1697,10 @@ function bindPppPageFilters () {
       if (state.pppFilters.tiers.has(tier)) state.pppFilters.tiers.delete(tier)
       else state.pppFilters.tiers.add(tier)
     }
+    if (direction) {
+      if (state.pppFilters.directions.has(direction)) state.pppFilters.directions.delete(direction)
+      else state.pppFilters.directions.add(direction)
+    }
     renderPppPageFilters()
     renderPppPageList()
   })
@@ -1663,6 +1708,7 @@ function bindPppPageFilters () {
   $('#ppp-filter-reset')?.addEventListener('click', () => {
     state.pppFilters.regions = new Set()
     state.pppFilters.tiers = new Set()
+    state.pppFilters.directions = new Set()
     renderPppPageFilters()
     renderPppPageList()
   })
@@ -1937,7 +1983,11 @@ function apply () {
   renderProfileStorageStatus()
   renderRegionTabs()
   renderHeroQuickTags()
-  if (state.currentView === 'ppp') renderPppHighlight()
+  if (state.currentView === 'ppp') {
+    renderPppHighlight()
+    renderPppPageFilters()
+    renderPppPageList()
+  }
   if (state.currentView === 'favorites') renderFavoritesPage()
   if (state.currentView === 'compare') renderComparePage()
   bindScrollShells(document)
